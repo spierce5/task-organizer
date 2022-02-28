@@ -1,0 +1,19 @@
+#form {
+    background-image: url('../../../public/teahup_wallpaper.jpeg');
+    background-size: contain;
+    box-shadow: 0 10px 100px black;
+    height: 75vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+#login {
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 5px;
+    width: 20vw;
+    padding: 10px;
+}
+

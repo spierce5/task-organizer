@@ -1,0 +1,49 @@
+.main {
+    display: grid;
+    grid-template-columns: 25vw 2vw 46vw 2vw 25vw;
+    grid-template-rows: 15vh 70vh 15vh;
+    grid-template-areas: 
+    'header header header header header'
+    'folder-container . task-container . .'
+    'footer footer footer footer footer';
+    width: 100vw;
+    height: 100vh;
+}
+
+#session-details {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 12px 10px 12px 10px ;
+    border-left: 2px solid gray;
+    border-bottom: 2px solid gray;
+    border-radius: 0 0 0 5px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: auto;
+}
+
+#session-details >  Button {
+    margin: 5px 0 0 0;
+}
+
+#folder-container {
+    grid-area: folder-container;
+}
+
+#task-container {
+    grid-area: task-container;
+}
+
+.header {
+    grid-area: header;
+}
+
+.footer {
+    grid-area: footer;
+}
+
+.folder {
+    width: 12vw;
+}
