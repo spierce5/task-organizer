@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Firebase from './Firebase';
 import Button from './Common/Button';
 import AppBar from './Common/AppBar';
 import './Home.css';
@@ -245,6 +246,8 @@ export default function Home() {
                 </List>
             </Paper>
             </div>
+
+            <Firebase/>
 {/*
             <div id='session-details'>
                 <b>Logged in as:<br/> {user}</b><br/>{' '}<br/>

@@ -1,6 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { getDatabase } from "firebase/database";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -9,6 +11,7 @@ import { getAnalytics } from "firebase/analytics";
 const firebaseConfig = {
   apiKey: "AIzaSyD-F0TWmS5yZthGaN4ijUzShRcF0MBWKwA",
   authDomain: "react-register-f4977.firebaseapp.com",
+  databaseURL: "https://react-register-f4977-default-rtdb.firebaseio.com",
   projectId: "react-register-f4977",
   storageBucket: "react-register-f4977.appspot.com",
   messagingSenderId: "756925330854",
@@ -19,3 +22,4 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+export const db = getDatabase(app);

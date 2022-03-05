@@ -29,6 +29,8 @@ function App() {
         .then((response) => {
           navigate('/home')
           sessionStorage.setItem('Auth Token', response._tokenResponse.refreshToken)
+          sessionStorage.setItem('User', JSON.stringify(email))
+          sessionStorage.setItem('Uid', response.user.uid)
         })
         .catch((error) => {
           if (error.code === 'auth/email-already-in-use') {
@@ -41,6 +43,7 @@ function App() {
         .then((response) => {
           sessionStorage.setItem('Auth Token', response._tokenResponse.refreshToken)
           sessionStorage.setItem('User', JSON.stringify(email))
+          sessionStorage.setItem('Uid', response.user.uid)
           navigate('/home')
         })
         .catch((error) => {

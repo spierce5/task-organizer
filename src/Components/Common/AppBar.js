@@ -23,6 +23,7 @@ export default function MenuAppBar({ user }) {
   const handleLogout = () => {
     sessionStorage.removeItem('Auth Token');
     sessionStorage.removeItem('User'); 
+    sessionStorage.removeItem('Uid');
     sessionStorage.clear();
     //using navigate isn't clearing sessionStorage. Refreshing the page does, then navigates to Login since no token
     window.location.reload(false);

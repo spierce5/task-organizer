@@ -7,9 +7,12 @@ import './Form.css'
 import $ from 'jquery';
 
 export default function BasicTextFields({ title, setPassword, setEmail, handleAction, redirect }) {
+    let imageClass = (title == 'Login' ? 'sign-in' : 'register');
+    
     const handleKeyDown = (e) => {
         if(e.keyCode == 13){
             //Login
+            $( 'Button' ).first().trigger( "click" )
         }
       };
     
@@ -31,47 +34,63 @@ export default function BasicTextFields({ title, setPassword, setEmail, handleAc
     }
     
     return (
-        <div id='form'>
-            <div id='login'>
-                <div className="heading-container">
-                    <h3>
-                        {title == 'Login' ? 'Sign-In' : 'Welcome!'}
-                    </h3>
-                </div>
-
+        <div id='frame'>        
+            <Box
+                id="form"
+                className={imageClass}
+            >
                 <Box
-                    component="form"
                     sx={{
-                        textAlign: 'center',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContents: 'center',
-                        fontWeight: 'bold',
+                        backgroundColor: 'white',
+                        opacity: .92,
                         padding: '15px',
+                        borderRadius: '2px'
                     }}
-                    noValidate
-                    autoComplete="off"
                 >
-                    <TextField
-                        id="email" 
-                        label="Email" 
-                        variant="standard" 
-                        onChange={(e) => setEmail(e.target.value)}    
-                    />
-                    <TextField 
-                        id="password" 
-                        label="Password" 
-                        variant="standard" 
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </Box>
+                    <Box
+                        component="form"
+                        sx={{
+                            textAlign: 'center',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContents: 'center',
+                            fontWeight: 'bold',
+                            padding: '15px',
+                        }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <h2>
+                            {title == 'Login' ? 'Sign-In' : 'Welcome!'}
+                        </h2>
+                        <TextField
+                            id="email" 
+                            label="Email" 
+                            variant="outlined" 
+                            onChange={(e) => setEmail(e.target.value)}    
+                            margin="dense"
+                            autoComplete="email"
 
-                <Button title={title == 'Login' ? title : "Sign Up"}  handleAction={handleAction}/>
-                <div>
-                    {signUp}
-                </div>
-            </div>
+                        />
+                        <TextField 
+                            id="password" 
+                            label="Password" 
+                            variant="outlined" 
+                            margin="dense"
+                            onChange={(e) => setPassword(e.target.value)}
+                            type='password'
+
+                        />
+                    </Box>
+
+                    <Button id='submit' title={title == 'Login' ? title : "Sign Up"}  handleAction={handleAction}/>
+                    <div>
+                        {signUp}
+                    </div>
+                </Box>
+            </Box>
         </div>
+        
     );
 }
