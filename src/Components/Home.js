@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Firebase from './Firebase';
+import { getUserData, addFolder } from './Firebase';
 import Button from './Common/Button';
 import AppBar from './Common/AppBar';
 import './Home.css';
@@ -15,9 +15,12 @@ import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import Paper from '@mui/material/Paper';
+import { getAuth } from 'firebase/auth'
+
 
 export default function Home() {
-    const [currentFolder, setFolder] = useState('');
+    const [currentFolder, setFolder] = useState();
+    const [userData, setData] = useState();
     const CREATE_FOLDER = 'CREATE_FOLDER'
     const SELECT_FOLDER = 'SELECT_FOLDER'
 
@@ -29,6 +32,9 @@ export default function Home() {
         let authToken = sessionStorage.getItem('Auth Token')
         if (authToken) {
             navigate('/home')
+            getAuth()
+            getUserData(setData)
+            
         }
 
         if (!authToken) {
@@ -36,119 +42,36 @@ export default function Home() {
         }
     }, [])
 
-    let folders = [
-        {
-            "folder_name": "Work",
-            "Tasks": [
-                {
-                    "task_name": "Task 1",
-                    "Description": "A task",
-                    "due_date": "12-01-2022"
-                },
-                {
-                    "task_name": "Task 2",
-                    "Description": "Another task",
-                    "due_date": "11-01-2022"
-                },
-                {
-                    "task_name": "Task 3",
-                    "Description": "Don't forget to read this task",
-                    "due_date": "10-01-2022"
-                },
-                {
-                    "task_name": "Task 4",
-                    "Description": "Last task",
-                    "due_date": "09-01-2022"
-                },
-                {
-                    "task_name": "Task 2",
-                    "Description": "Another task",
-                    "due_date": "11-01-2022"
-                },
-                {
-                    "task_name": "Task 3",
-                    "Description": "Don't forget to read this task",
-                    "due_date": "10-01-2022"
-                },
-                {
-                    "task_name": "Task 4",
-                    "Description": "Last task",
-                    "due_date": "09-01-2022"
-                },
-                {
-                    "task_name": "Task 2",
-                    "Description": "Another task",
-                    "due_date": "11-01-2022"
-                },
-                {
-                    "task_name": "Task 3",
-                    "Description": "Don't forget to read this task",
-                    "due_date": "10-01-2022"
-                },
-                {
-                    "task_name": "Task 4",
-                    "Description": "Last task",
-                    "due_date": "09-01-2022"
-                },
-                {
-                    "task_name": "Task 2",
-                    "Description": "Another task",
-                    "due_date": "11-01-2022"
-                },
-                {
-                    "task_name": "Task 3",
-                    "Description": "Don't forget to read this task",
-                    "due_date": "10-01-2022"
-                },
-                {
-                    "task_name": "Task 4",
-                    "Description": "Last task",
-                    "due_date": "09-01-2022"
-                },
-                {
-                    "task_name": "Task 2",
-                    "Description": "Another task",
-                    "due_date": "11-01-2022"
-                },
-                {
-                    "task_name": "Task 3",
-                    "Description": "Don't forget to read this task",
-                    "due_date": "10-01-2022"
-                },
-                {
-                    "task_name": "Task 4",
-                    "Description": "Last task",
-                    "due_date": "09-01-2022"
-                }
-            ]
-        },
-        {
-            "folder_name": "Personal",
-            "Tasks": [
-                {
-                    "task_name": "Task 2",
-                    "Description": "A task",
-                    "due_date": "11-01-2022"
-                }
-            ]
-        }
-    ]
 
-    const getTasks = (currentFolderName, folders) => {
-        let tasks = [];
-        let filteredList = folders.filter( (folder) => folder.folder_name == currentFolder);
-        if(filteredList.length > 0){
-            let currentFolder = filteredList[0];
-            tasks = currentFolder.Tasks.map( (task, idx) => 
+    const getFolders = () => {
+        if(userData){
+            return Object.keys(userData.folders).map( (folder, idx) =>   
+                            <ListItem key={idx} >
+                                <ListItemButton divider={true} onClick={ (e) => {handleClick(e, SELECT_FOLDER)}}>
+                                    <ListItemAvatar >
+                                        <Avatar >
+                                            <FolderOpenOutlinedIcon />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText primary={folder}/>
+                                </ListItemButton>
+                            </ListItem>)
+        }
+    }
+
+    const getTasks = () => {
+        if(userData && currentFolder){
+            let folder = userData.folders[currentFolder];
+            return Object.keys(folder).map( (task, idx) => 
                 <ListItem key={idx}>
                     <ListItemButton>
                         <AssignmentIcon color='success'sx={{fontSize: 40}}/>
-                        <ListItemText fontSize='large' primary={task.task_name + ': ' + task.Description} secondary={'Due ' + task.due_date}/>
+                        <ListItemText fontSize='large' primary={task + ': ' + folder[task].Short_Description} secondary={folder[task].Due_Date ? 'Due: ' + folder[task].Due_Date : 'No due date'}/>
                     </ListItemButton>
                 </ListItem>
             )
         }
-        return tasks;
+
     }
 
     const selectFolder = (e) => {
@@ -158,6 +81,7 @@ export default function Home() {
     const createFolder = () => {
         console.log('Creating Folder')
         //Add creation functionality
+        addFolder(Object.keys(userData.folders),'Web Design')
     }
 
     const handleClick = (e, ID) => {
@@ -181,17 +105,7 @@ export default function Home() {
                         Folders
                 </ListSubheader>
                 <List>
-                    {folders.map( (folder, idx) =>   
-                    <ListItem key={idx} >
-                        <ListItemButton divider={true} onClick={ (e) => {handleClick(e, SELECT_FOLDER)}}>
-                            <ListItemAvatar >
-                                <Avatar >
-                                    <FolderOpenOutlinedIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary={folder.folder_name}/>
-                        </ListItemButton>
-                    </ListItem>)}
+                    {getFolders()}
                     <ListItem   
                         onClick={ (e) => {handleClick(e, CREATE_FOLDER)}}
                         key='9999' 
@@ -234,7 +148,7 @@ export default function Home() {
             <div id='task-container'>
             <Paper elevation={12}>
                 <ListSubheader component="div" id="nested-list-subheader" >
-                                {currentFolder == '' ? 'Select a folder' : currentFolder}
+                                {currentFolder ? currentFolder : 'Select a folder'}
                 </ListSubheader>
                 <List 
                     sx={{
@@ -242,17 +156,10 @@ export default function Home() {
                         height: '70vh',
                         }}
                 >
-                    {getTasks(currentFolder, folders)}
+                    {getTasks()}
                 </List>
             </Paper>
             </div>
-
-            <Firebase/>
-{/*
-            <div id='session-details'>
-                <b>Logged in as:<br/> {user}</b><br/>{' '}<br/>
-                <Button variant='text' id='logout' color='error' title='Log out' handleAction={handleLogout}/>
-            </div> */}
         </div>
     )
 }
