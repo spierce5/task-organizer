@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const getUserData = (setUserData) => { 
+export const getUserData = (setUserData, setLoaded) => { 
     let currentUser = sessionStorage.getItem('Uid');
     let data = {}; 
 
@@ -15,6 +15,7 @@ export const getUserData = (setUserData) => {
             data = snapshot.val();
             console.log(data);
             setUserData(data);
+            setLoaded(false);
         }
       }, (error) => console.log('Error: ' + error.code));
       
