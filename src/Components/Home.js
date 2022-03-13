@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getUserData, addFolder } from './Firebase';
 import Button from './Common/Button';
 import AppBar from './Common/AppBar';
+import TaskBox from './TaskBox';
 import './Home.css';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader'
@@ -19,19 +20,16 @@ import { getAuth } from 'firebase/auth'
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
-// Modal
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-
 
 export default function Home() {
     const [currentFolder, setFolder] = useState();
+    const [currentTask, setTask] = useState();
     const [userData, setData] = useState();
     const [isLoaded, setLoaded] = useState(true);
-    // Modal
     const [taskIsOpen, setTaskOpen] = useState(false);
-    const handleOpen = () => {
+
+    const handleOpen = (task) => {
+        setTask(task.match(/(.*)(?=\:\s)/)[0]);
         setTaskOpen(true);
     }
     const handleClose = () => {
@@ -104,37 +102,11 @@ export default function Home() {
 
     const getTaskDetails = () => {
         return (
-            <Modal
-                open={taskIsOpen}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 800,
-                    height: 600,
-                    bgcolor: 'background.paper',
-                    opacity: .9,
-                    //border: '2px solid #000',
-                    boxShadow: 24,
-                    p: 4,
-                }}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Text in a modal
-                    </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                    </Typography>
-                    <Button 
-                        title='Close Task'
-                        handleAction={handleClose}
-                    />
-                </Box>
-            </Modal>
+            <TaskBox 
+                isOpen={taskIsOpen}
+                close={handleClose}
+                task={userData.folders[currentFolder][currentTask]}
+            />
       )
     }
 
@@ -143,7 +115,7 @@ export default function Home() {
     }
 
     const selectTask = (e) => {
-        handleOpen()
+        handleOpen(e.currentTarget.innerText)
     }
 
     const createFolder = () => {
