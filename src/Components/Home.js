@@ -29,7 +29,7 @@ export default function Home() {
     const [taskIsOpen, setTaskOpen] = useState(false);
 
     const handleOpen = (task) => {
-        setTask(task.match(/(.*)(?=\:\s)/)[0]);
+        setTask(task);
         setTaskOpen(true);
     }
     const handleClose = () => {
@@ -90,9 +90,9 @@ export default function Home() {
             let folder = userData.folders[currentFolder];
             return Object.keys(folder).map( (task, idx) => 
                 <ListItem key={idx}>
-                    <ListItemButton onClick={selectTask}>
+                    <ListItemButton id={task} onClick={selectTask}>
                         <AssignmentIcon color='success'sx={{fontSize: 40}}/>
-                        <ListItemText fontSize='large' primary={task + ': ' + folder[task].Short_Description} secondary={folder[task].Due_Date ? 'Due: ' + folder[task].Due_Date : 'No due date'}/>
+                        <ListItemText fontSize='large' primary={folder[task].short_description} secondary={folder[task].due_date ? 'Due: ' + folder[task].due_date : 'No due date'}/>
                     </ListItemButton>
                 </ListItem>
             )
@@ -101,13 +101,15 @@ export default function Home() {
     }
 
     const getTaskDetails = () => {
-        return (
-            <TaskBox 
-                isOpen={taskIsOpen}
-                close={handleClose}
-                task={userData.folders[currentFolder][currentTask]}
-            />
-      )
+        if(taskIsOpen){
+            return (
+                <TaskBox 
+                    isOpen={taskIsOpen}
+                    close={handleClose}
+                    task={userData.folders[currentFolder][currentTask]}
+                />
+            )
+        }
     }
 
     const selectFolder = (e) => {
@@ -115,7 +117,7 @@ export default function Home() {
     }
 
     const selectTask = (e) => {
-        handleOpen(e.currentTarget.innerText)
+        handleOpen(e.currentTarget.id)
     }
 
     const createFolder = () => {

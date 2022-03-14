@@ -32,7 +32,7 @@ export const addFolder = (folders, folderName) => {
         update(reference2, {
             [folderName]: {
                 'Task 1': {
-                    'Short_Description': 'New Task'
+                    'short_description': 'New Task'
                 }
             }
         })
