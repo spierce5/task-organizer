@@ -4,6 +4,10 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+
 
 export default function TaskBox({ isOpen, task, close }) {
     return (
@@ -21,10 +25,10 @@ export default function TaskBox({ isOpen, task, close }) {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: '42vw',
-                    height: '80vh',
+                    width: '35vw',
+                    height: '60vh',
                     bgcolor: 'background.paper',
-                    opacity: .9,
+                    opacity: .95,
                     //border: '2px solid #000',
                     boxShadow: 24,
                     p: 4,
@@ -57,11 +61,23 @@ export default function TaskBox({ isOpen, task, close }) {
                     multiline
                     className={'task-field long-field'}
                 />
-                <Button 
-                    title='Close Task'
-                    className='close'
-                    handleAction={close}
-                />
+                <Tooltip 
+                    title='Close' 
+                    placement='right'
+                    className='MuiTooltip-tooltip'
+                    sx={{
+                        position: 'absolute',
+                        top: '5px',
+                        right: '5px'
+                    }}
+                >
+                    <IconButton 
+                        size='small'
+                        onClick={close}
+                    >
+                        <CloseIcon fontSize='small'/>
+                    </IconButton>
+                </Tooltip>
             </Box>
         </Modal>
     )

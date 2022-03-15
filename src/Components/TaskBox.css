@@ -1,5 +1,5 @@
 .name {
-    grid-area: name;
+    grid-area: name;    
 }
 
 .task-field {
@@ -8,7 +8,8 @@
 
 .short-field {
     grid-area: sField;
-    width: fit-content;
+    max-width: fit-content;
+    margin: 5px 5px 5px 5px;
 }
 
 .long-field {
@@ -23,25 +24,19 @@
     grid-area: due;
 }
 
-.close {
-    grid-area: close;
-    width: fit-content;
-    height: fit-content;
-    position: absolute;
-    top: 5px;
-    right: 5px;
-}
-
 .task-grid{
     display: grid;
-    grid-template-columns: 35% 65%;
+    grid-template-columns: 30% 5% 30% 5% 30%;
     grid-template-rows: 20% 20% 20% 20% 20%;
     grid-template-areas: 
-    'name name'
-    'priority lField'
-    'due lField'
-    '. lField'
-    '. lField';
+    'name name name name name'
+    'priority . due . .'
+    'lField lField lField . .'
+    'lField lField lField . .'
+    'lField lField lField . .';
 }
 
-
+.MuiTooltip-tooltip {
+    background-color: white;
+    color: black;
+}
