@@ -8,8 +8,10 @@
 
 .short-field {
     grid-area: sField;
-    max-width: fit-content;
-    margin: 5px 5px 5px 5px;
+}
+
+.form {
+    grid-area: form;
 }
 
 .long-field {
@@ -24,16 +26,20 @@
     grid-area: due;
 }
 
+.complete {
+    grid-area: complete;
+}
+
 .task-grid{
     display: grid;
     grid-template-columns: 30% 5% 30% 5% 30%;
     grid-template-rows: 20% 20% 20% 20% 20%;
     grid-template-areas: 
     'name name name name name'
-    'priority . due . .'
-    'lField lField lField . .'
-    'lField lField lField . .'
-    'lField lField lField . .';
+    'form form form form form'
+    'lField lField lField lField lField'
+    'lField lField lField lField lField'
+    'complete . . . .';
 }
 
 .MuiTooltip-tooltip {

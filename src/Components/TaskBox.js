@@ -7,9 +7,15 @@ import TextField from '@mui/material/TextField';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import MenuItem from '@mui/material/MenuItem';
 
 
 export default function TaskBox({ isOpen, task, close }) {
+    const priorities = ['High', 'Medium', 'Low'];
+
     return (
         <Modal
             open={isOpen}
@@ -36,26 +42,36 @@ export default function TaskBox({ isOpen, task, close }) {
                 <Typography id="modal-modal-title" variant="h4" component="h2">
                     {task.short_description}
                 </Typography>
-                <TextField
-                    id="filled-multiline-flexible"
-                    label="Priority"
-                    maxRows={1}
-                    value={task.priority}
-                    variant="filled"
-                    className='task-field short-field priority' 
-                />
-                <TextField
-                    id="filled-multiline-flexible"
-                    label="Due Date"
-                    maxRows={4}
-                    value={task.due_date}
-                    variant="filled"
-                    className='task-field short-field due-date'
-                />
+                <FormGroup className='form' row='true'>
+                    <TextField
+                        id="filled-multiline-flexible"
+                        select
+                        label="Priority"
+                        maxRows={1}
+                        value={task.priority}
+                        variant="filled"
+                        className='task-field short-field priority'
+                    >
+                        {priorities.map( (option) =>  (
+                            <MenuItem key={option} value={option}>
+                                {option}
+                            </MenuItem>
+                            )
+                        )}
+                    </TextField>
+                    <TextField
+                        id="filled-multiline-flexible"
+                        label="Due Date"
+                        maxRows={4}
+                        value={task.due_date}
+                        variant="filled"
+                        className='task-field short-field due-date'
+                    />
+                </FormGroup>
                 <TextField
                     id="filled-multiline-flexible"
                     label="Description"
-                    maxRows={6}
+                    maxRows={9}
                     value={task.long_description}
                     variant="filled"
                     multiline
@@ -63,7 +79,7 @@ export default function TaskBox({ isOpen, task, close }) {
                 />
                 <Tooltip 
                     title='Close' 
-                    placement='right'
+                    placement='bottom-end'
                     className='MuiTooltip-tooltip'
                     sx={{
                         position: 'absolute',
@@ -78,6 +94,13 @@ export default function TaskBox({ isOpen, task, close }) {
                         <CloseIcon fontSize='small'/>
                     </IconButton>
                 </Tooltip>
+                <FormControlLabel 
+                    className='complete'
+                    control={
+                        <Checkbox 
+                            color='success'
+                        />} 
+                    label="Complete" />
             </Box>
         </Modal>
     )

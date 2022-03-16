@@ -19,6 +19,8 @@ import Paper from '@mui/material/Paper';
 import { getAuth } from 'firebase/auth'
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 
 export default function Home() {
@@ -145,46 +147,29 @@ export default function Home() {
             <div id='folder-container'> 
             <Paper elevation={8}>
                 <ListSubheader component="div" id="nested-list-subheader">
-                        Folders
+                    Folders
+                    <Tooltip 
+                        title={<h3>Create New Folder</h3>}
+                        placement='bottom-end' 
+                        arrow='true'
+                        enterDelay={1}
+                        enterTouchDelay={1}
+                    >
+                        <IconButton 
+                        onClick={ (e) => {handleClick(e, CREATE_FOLDER)}}
+                        size='large' 
+                        sx={{
+                            position:'absolute', 
+                            top:'5px', 
+                            right:'5px'
+                            }}
+                        >
+                            <CreateNewFolderOutlinedIcon/>
+                        </IconButton>
+                    </Tooltip>
                 </ListSubheader>
                 <List>
                     {getFolders()}
-                    <ListItem   
-                        onClick={ (e) => {handleClick(e, CREATE_FOLDER)}}
-                        key='9999' 
-                        sx={{ 
-                            '&:hover': {
-                                backgroundColor: 'transparent',
-                            },
-                            '&:active': {
-                                backgroundColor: 'transparent',
-                            }
-                        }}
-                    >
-                        <ListItemButton 
-                            disableRipple={true} 
-                            sx={{  
-                                '&:hover': {
-                                backgroundColor: 'transparent',
-                                }
-                            }}
-                        >
-                            <ListItemAvatar >
-                                <Avatar 
-                                    title='Create New Folder' 
-                                    sx={{
-                                        '&:hover': {
-                                            color: 'gray',
-                                            border: '2px solid gray',
-                                            backgroundColor: 'white',
-                                        }
-                                    }}
-                                >
-                                    <CreateNewFolderOutlinedIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                        </ListItemButton>
-                    </ListItem>
                 </List>         
             </Paper>
             </div>
