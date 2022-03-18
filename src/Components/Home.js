@@ -21,6 +21,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 
 
 export default function Home() {
@@ -125,7 +126,7 @@ export default function Home() {
     const createFolder = () => {
         console.log('Creating Folder')
         //Add creation functionality
-        addFolder(Object.keys(userData.folders),'Cats 2')
+        addFolder(Object.keys(userData.folders),'New Folder')
     }
 
     const handleClick = (e, ID) => {
@@ -176,7 +177,26 @@ export default function Home() {
             <div id='task-container'>
             <Paper elevation={12}>
                 <ListSubheader component="div" id="nested-list-subheader" >
-                                {currentFolder ? currentFolder : 'Select a folder'}
+                    {currentFolder ? currentFolder : 'Select a folder'}
+                    {currentFolder && <Tooltip 
+                        title={<h3>Create New Task</h3>}
+                        placement='bottom-end' 
+                        arrow='true'
+                        enterDelay={1}
+                        enterTouchDelay={1}
+                    >
+                        <IconButton 
+                        
+                        size='large' 
+                        sx={{
+                            position:'absolute', 
+                            top:'5px', 
+                            right:'5px'
+                            }}
+                        >
+                            <PlaylistAddIcon/>
+                        </IconButton>
+                    </Tooltip>}
                 </ListSubheader>
                 <List 
                     sx={{

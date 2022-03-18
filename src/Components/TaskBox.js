@@ -51,6 +51,7 @@ export default function TaskBox({ isOpen, task, close }) {
                         value={task.priority}
                         variant="filled"
                         className='task-field short-field priority'
+                        sx={{margin:'0 10px 0 0', minWidth: '100px'}}
                     >
                         {priorities.map( (option) =>  (
                             <MenuItem key={option} value={option}>
@@ -66,6 +67,7 @@ export default function TaskBox({ isOpen, task, close }) {
                         value={task.due_date}
                         variant="filled"
                         className='task-field short-field due-date'
+                        sx={{margin:'0 10px 0 0'}}
                     />
                 </FormGroup>
                 <TextField
