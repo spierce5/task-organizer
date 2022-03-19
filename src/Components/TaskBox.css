@@ -37,6 +37,10 @@
     grid-area: complete;
 }
 
+.save {
+    grid-area: save;
+}
+
 .task-grid{
     display: grid;
     grid-template-columns: 30% 5% 30% 5% 30%;
@@ -46,7 +50,7 @@
     'form form form form form'
     'lField lField lField lField lField'
     'lField lField lField lField lField'
-    'complete . . . .';
+    'complete . . . save';
 }
 
 .MuiTooltip-tooltip {

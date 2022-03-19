@@ -1,4 +1,5 @@
 import './TaskBox.css';
+import React, { useEffect, useState } from 'react'
 import Button from './Common/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -13,10 +14,16 @@ import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import EditIcon from '@mui/icons-material/Edit';
 import Stack from '@mui/material/Stack';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 
 
 export default function TaskBox({ isOpen, task, close }) {
     const priorities = ['High', 'Medium', 'Low'];
+    const [edit, setEdit] = useState(false)
+
+    const handleClick = () => {
+        setEdit(!edit);
+    }
 
     return (
         <Modal
@@ -88,6 +95,7 @@ export default function TaskBox({ isOpen, task, close }) {
                     <Tooltip
                         title='Edit'
                         placement='bottom-end'
+                        onClick={handleClick}
                     >
                         <IconButton>
                             <EditIcon/>
@@ -114,6 +122,15 @@ export default function TaskBox({ isOpen, task, close }) {
                             color='success'
                         />} 
                     label="Complete" />
+                {edit &&
+                <IconButton
+                    className='save'
+                >
+                    <SaveOutlinedIcon
+                        fontSize='large'
+                    />
+                </IconButton>
+                }
             </Box>
         </Modal>
     )
