@@ -11,6 +11,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
+import EditIcon from '@mui/icons-material/Edit';
+import Stack from '@mui/material/Stack';
 
 
 export default function TaskBox({ isOpen, task, close }) {
@@ -79,23 +81,32 @@ export default function TaskBox({ isOpen, task, close }) {
                     multiline
                     className={'task-field long-field'}
                 />
-                <Tooltip 
-                    title='Close' 
-                    placement='bottom-end'
-                    className='MuiTooltip-tooltip'
-                    sx={{
-                        position: 'absolute',
-                        top: '5px',
-                        right: '5px'
-                    }}
+                <Stack
+                    className='stack'
+                    direction='row'
                 >
-                    <IconButton 
-                        size='small'
-                        onClick={close}
+                    <Tooltip
+                        title='Edit'
+                        placement='bottom-end'
                     >
-                        <CloseIcon fontSize='small'/>
-                    </IconButton>
-                </Tooltip>
+                        <IconButton>
+                            <EditIcon/>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip 
+                        title='Close' 
+                        placement='bottom-end'
+                        className='MuiTooltip-tooltip'
+
+                    >
+                        <IconButton 
+                            size='small'
+                            onClick={close}
+                        >
+                            <CloseIcon fontSize='small'/>
+                        </IconButton>
+                    </Tooltip>
+                </Stack>
                 <FormControlLabel 
                     className='complete'
                     control={
