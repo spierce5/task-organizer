@@ -22,6 +22,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import Popover from '@mui/material/Popover';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 
 export default function Home() {
@@ -30,6 +36,16 @@ export default function Home() {
     const [userData, setData] = useState();
     const [isLoaded, setLoaded] = useState(true);
     const [taskIsOpen, setTaskOpen] = useState(false);
+    const [newTask, setNewTask] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [newFolder, setNewFolder] = useState(null);
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+      };
+    
+      const openPopover = Boolean(anchorEl);
+      const id = openPopover ? 'simple-popover' : undefined;
 
     const handleOpen = (task) => {
         setTask(task);
@@ -124,15 +140,20 @@ export default function Home() {
     }
 
     const createFolder = () => {
-        console.log('Creating Folder')
+        console.log('Creating Folder: ' + newFolder)
         //Add creation functionality
-        addFolder(Object.keys(userData.folders),'New Folder')
+        addFolder(Object.keys(userData.folders), newFolder)
+        setAnchorEl(null)
+    }
+
+    const createTask = () => {
+        setNewTask(true);
     }
 
     const handleClick = (e, ID) => {
         switch(ID) {
             case CREATE_FOLDER:
-                createFolder(e);
+                setAnchorEl(e.currentTarget);
                 break;
             case SELECT_FOLDER:
                 selectFolder(e)
@@ -149,25 +170,67 @@ export default function Home() {
             <Paper elevation={8}>
                 <ListSubheader component="div" id="nested-list-subheader">
                     Folders
-                    <Tooltip 
-                        title={<h3>Create New Folder</h3>}
-                        placement='bottom-end' 
-                        arrow='true'
-                        enterDelay={1}
-                        enterTouchDelay={1}
+
+                    <IconButton 
+                    aria-describedby={id}
+                    onClick={ (e) => {handleClick(e, CREATE_FOLDER)}}
+                    size='large' 
+                    sx={{
+                        position:'absolute', 
+                        top:'5px', 
+                        right:'5px'
+                        }}
                     >
-                        <IconButton 
-                        onClick={ (e) => {handleClick(e, CREATE_FOLDER)}}
-                        size='large' 
-                        sx={{
-                            position:'absolute', 
-                            top:'5px', 
-                            right:'5px'
-                            }}
+                        <Tooltip 
+                            title={<h3>Create New Folder</h3>}
+                            placement='bottom-end' 
+                            arrow='true'
+                            enterDelay={1}
+                            enterTouchDelay={1}
                         >
                             <CreateNewFolderOutlinedIcon/>
-                        </IconButton>
-                    </Tooltip>
+                        
+                        </Tooltip>
+                    </IconButton>
+                        {/* Popover to enter folder name*/}
+                        <Popover
+                            id={id}
+                            open={openPopover}
+                            anchorEl={anchorEl}
+                            onClose={handlePopoverClose}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    padding: '5px'
+                                }}
+                            >
+                                <Stack
+                                    direction='column'
+                                >
+                                    <TextField
+                                        label='Folder Name'
+                                        variant='filled'
+                                        onChange={(e) => setNewFolder(e.target.value)}
+                                        sx={{
+                                            margin: '0 0 5px 0'
+                                        }}
+                                    />
+                                    <Button
+                                        handleAction={createFolder}
+                                        title='Create Folder'
+                                        color='grey'
+                                    />
+                                </Stack>
+                            </Box>
+                        </Popover>
                 </ListSubheader>
                 <List>
                     {getFolders()}
@@ -186,7 +249,7 @@ export default function Home() {
                         enterTouchDelay={1}
                     >
                         <IconButton 
-                        
+                        onClick={createTask}
                         size='large' 
                         sx={{
                             position:'absolute', 
@@ -197,6 +260,12 @@ export default function Home() {
                             <PlaylistAddIcon/>
                         </IconButton>
                     </Tooltip>}
+                    <Dialog
+                        open={newTask}
+                        onClose={() => {setNewTask(false)}}
+                    >
+                        <DialogTitle>New Task</DialogTitle>
+                    </Dialog>
                 </ListSubheader>
                 <List 
                     sx={{

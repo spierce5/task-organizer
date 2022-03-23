@@ -18,11 +18,18 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 
 
 export default function TaskBox({ isOpen, task, close }) {
+    const EDIT = 'EDIT';
+    const SAVE = 'SAVE';
     const priorities = ['High', 'Medium', 'Low'];
-    const [edit, setEdit] = useState(false)
+    const [editing, setEditing] = useState(false)
 
-    const handleClick = () => {
-        setEdit(!edit);
+    const handleClick = (ID) => {
+        switch(ID){
+            case SAVE:
+            case EDIT:
+                setEditing(!editing);
+                break;
+        }
     }
 
     return (
@@ -95,7 +102,7 @@ export default function TaskBox({ isOpen, task, close }) {
                     <Tooltip
                         title='Edit'
                         placement='bottom-end'
-                        onClick={handleClick}
+                        onClick={() => handleClick(EDIT)}
                     >
                         <IconButton>
                             <EditIcon/>
@@ -122,7 +129,7 @@ export default function TaskBox({ isOpen, task, close }) {
                             color='success'
                         />} 
                     label="Complete" />
-                {edit &&
+                {editing &&
                 <IconButton
                     className='save'
                 >
