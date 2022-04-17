@@ -55,19 +55,44 @@ export default function TaskBox({ isOpen, task, close, edit=false }) {
                     boxShadow: 24,
                     p: 4,
                 }}>
-                <Typography id="modal-modal-title" variant="h4" component="h2">
+                {/* <Typography id="modal-modal-title" variant="h4" component="h2">
                     {task.short_description}
-                </Typography>
+                </Typography> */}
+                <TextField
+                    id='modal-modal-title'
+                    maxRows={1}
+                    variant='standard'
+                    defaultValue={task.short_description}
+                    disabled={!editing}
+                    inputProps={{
+                        style: {
+                            fontSize: 40,
+                            fontWeight: 'bold'
+                        }
+                    }}
+                    sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                            WebkitTextFillColor: "#3d3d3d",
+                        },
+                    }}
+                />
                 <FormGroup className='form' row='true'>
                     <TextField
                         id="filled-multiline-flexible"
                         select
                         label="Priority"
                         maxRows={1}
-                        value={task.priority}
+                        default={task.priority}
+                        disabled={!editing}
                         variant="filled"
                         className='task-field short-field priority'
-                        sx={{margin:'0 10px 0 0', minWidth: '100px'}}
+                        sx={{
+                            margin:'0 10px 0 0',
+                             minWidth: '100px',
+                             "& .MuiInputBase-input.Mui-disabled": {
+                            WebkitTextFillColor: "#3d3d3d",
+                            },
+                        }}
                     >
                         {priorities.map( (option) =>  (
                             <MenuItem key={option} value={option}>
@@ -80,20 +105,32 @@ export default function TaskBox({ isOpen, task, close, edit=false }) {
                         id="filled-multiline-flexible"
                         label="Due Date"
                         maxRows={4}
-                        value={task.due_date}
+                        default={task.due_date}
+                        disabled={!editing}
                         variant="filled"
                         className='task-field short-field due-date'
-                        sx={{margin:'0 10px 0 0'}}
+                        sx={{
+                            margin:'0 10px 0 0',
+                            "& .MuiInputBase-input.Mui-disabled": {
+                            WebkitTextFillColor: "#3d3d3d",
+                            },
+                        }}
                     />
                 </FormGroup>
                 <TextField
                     id="filled-multiline-flexible"
                     label="Description"
                     maxRows={9}
-                    value={task.long_description}
+                    default={task.long_description}
+                    disabled={!editing}
                     variant="filled"
                     multiline
                     className={'task-field long-field'}
+                    sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                            WebkitTextFillColor: "#3d3d3d",
+                        },
+                    }}
                 />
                 <Stack
                     className='stack'
@@ -134,6 +171,7 @@ export default function TaskBox({ isOpen, task, close, edit=false }) {
                 {editing &&
                 <IconButton
                     className='save'
+                    onClick={() => setEditing(false)}
                 >
                     <SaveOutlinedIcon
                         fontSize='large'
