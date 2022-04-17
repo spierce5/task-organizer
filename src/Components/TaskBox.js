@@ -17,11 +17,11 @@ import Stack from '@mui/material/Stack';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 
 
-export default function TaskBox({ isOpen, task, close }) {
+export default function TaskBox({ isOpen, task, close, edit=false }) {
     const EDIT = 'EDIT';
     const SAVE = 'SAVE';
     const priorities = ['High', 'Medium', 'Low'];
-    const [editing, setEditing] = useState(false)
+    const [editing, setEditing] = useState(edit)
 
     const handleClick = (ID) => {
         switch(ID){
@@ -104,7 +104,9 @@ export default function TaskBox({ isOpen, task, close }) {
                         placement='bottom-end'
                         onClick={() => handleClick(EDIT)}
                     >
-                        <IconButton>
+                        <IconButton
+                            disabled={editing}
+                        >
                             <EditIcon/>
                         </IconButton>
                     </Tooltip>

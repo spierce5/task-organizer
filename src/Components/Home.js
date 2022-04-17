@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getUserData, addFolder } from './Firebase';
+import { getUserData, addFolder, addTask } from './Firebase';
 import Button from './Common/Button';
 import AppBar from './Common/AppBar';
 import TaskBox from './TaskBox';
@@ -36,7 +36,7 @@ export default function Home() {
     const [userData, setData] = useState();
     const [isLoaded, setLoaded] = useState(true);
     const [taskIsOpen, setTaskOpen] = useState(false);
-    const [newTask, setNewTask] = useState(false);
+    const [newTaskOpen, setNewTaskOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [newFolder, setNewFolder] = useState(null);
 
@@ -53,6 +53,7 @@ export default function Home() {
     }
     const handleClose = () => {
         setTaskOpen(false);
+        setNewTaskOpen(false);
     }
 
     const CREATE_FOLDER = 'CREATE_FOLDER'
@@ -126,6 +127,7 @@ export default function Home() {
                     isOpen={taskIsOpen}
                     close={handleClose}
                     task={userData.folders[currentFolder][currentTask]}
+                    edit={newTaskOpen}
                 />
             )
         }
@@ -140,14 +142,16 @@ export default function Home() {
     }
 
     const createFolder = () => {
-        console.log('Creating Folder: ' + newFolder)
-        //Add creation functionality
         addFolder(Object.keys(userData.folders), newFolder)
         setAnchorEl(null)
     }
 
     const createTask = () => {
-        setNewTask(true);
+        setLoaded(true)
+        let timeStamp = Date.now()
+        addTask(currentFolder, timeStamp)
+        setNewTaskOpen(true);
+        handleOpen(timeStamp)
     }
 
     const handleClick = (e, ID) => {
@@ -260,12 +264,6 @@ export default function Home() {
                             <PlaylistAddIcon/>
                         </IconButton>
                     </Tooltip>}
-                    <Dialog
-                        open={newTask}
-                        onClose={() => {setNewTask(false)}}
-                    >
-                        <DialogTitle>New Task</DialogTitle>
-                    </Dialog>
                 </ListSubheader>
                 <List 
                     sx={{

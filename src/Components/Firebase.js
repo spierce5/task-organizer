@@ -31,7 +31,7 @@ export const addFolder = (folders, folderName) => {
     if(!folders.includes(folderName)){
         update(reference2, {
             [folderName]: {
-                'Task 1': {
+                [Date.now()]: {
                     'short_description': 'New Task'
                 }
             }
@@ -41,6 +41,19 @@ export const addFolder = (folders, folderName) => {
         toast.error('Folder name is already in use')
     }
 };
+
+export const addTask = (folder, timeStamp) => {
+    let currentUser = sessionStorage.getItem('Uid');
+    let db = getDatabase();
+    
+    let reference = ref(db, 'users/' + currentUser + '/folders/' + folder + '/')
+
+    update(reference, {
+        [timeStamp]: {
+            'short_description': ''
+        }
+    })
+}
 
 
 
