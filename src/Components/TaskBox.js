@@ -64,6 +64,7 @@ export default function TaskBox({ isOpen, task, close, edit=false }) {
                     variant='standard'
                     defaultValue={task.short_description}
                     disabled={!editing}
+                    className='name'
                     inputProps={{
                         style: {
                             fontSize: 40,
@@ -82,7 +83,7 @@ export default function TaskBox({ isOpen, task, close, edit=false }) {
                         select
                         label="Priority"
                         maxRows={1}
-                        default={task.priority}
+                        defaultValue={task.priority}
                         disabled={!editing}
                         variant="filled"
                         className='task-field short-field priority'
@@ -104,8 +105,8 @@ export default function TaskBox({ isOpen, task, close, edit=false }) {
                     <TextField
                         id="filled-multiline-flexible"
                         label="Due Date"
-                        maxRows={4}
-                        default={task.due_date}
+                        maxRows={1}
+                        defaultValue={task.due_date}
                         disabled={!editing}
                         variant="filled"
                         className='task-field short-field due-date'
@@ -121,7 +122,8 @@ export default function TaskBox({ isOpen, task, close, edit=false }) {
                     id="filled-multiline-flexible"
                     label="Description"
                     maxRows={9}
-                    default={task.long_description}
+                    minRows={9}
+                    defaultValue={task.long_description}
                     disabled={!editing}
                     variant="filled"
                     multiline
