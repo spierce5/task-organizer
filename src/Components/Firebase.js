@@ -24,6 +24,7 @@ export const getUserData = (setUserData, setLoaded) => {
     (snapshot) => {
       if (snapshot) {
         data = snapshot.val();
+        setUserData(data);
         setLoaded(false);
       }
     },

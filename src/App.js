@@ -1,25 +1,25 @@
-import { useState, useEffect } from 'react';
-import './App.css';
-import Form from './Components/Common/Form';
-import Home from './Components/Home';
+import { useState, useEffect } from "react";
+import "./App.css";
+import Form from "./Components/Common/Form";
+import Home from "./Components/Home";
+import { Routes, Route, useNavigate, Redirect } from "react-router-dom";
+import { app } from "./firebase-config";
 import {
-  Routes,
-  Route,
-  useNavigate,
-  Redirect
-} from "react-router-dom";
-import { app } from './firebase-config';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, EmailAuthCredential } from 'firebase/auth'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  EmailAuthCredential,
+} from "firebase/auth";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const REGISTER = 'REGISTER';
-  const LOGIN = 'LOGIN';
-  const REDIRECT_TO_LOGIN = 'REDIRECT_TO_LOGIN';
-  const REDIRECT_TO_REGISTER = 'REDIRECT_TO_REGISTER'
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const REGISTER = "REGISTER";
+  const LOGIN = "LOGIN";
+  const REDIRECT_TO_LOGIN = "REDIRECT_TO_LOGIN";
+  const REDIRECT_TO_REGISTER = "REDIRECT_TO_REGISTER";
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   let navigate = useNavigate();
 
   const handleAction = (id) => {
@@ -27,54 +27,57 @@ function App() {
     if (id === REGISTER) {
       createUserWithEmailAndPassword(authentication, email, password)
         .then((response) => {
-          navigate('/home')
-          sessionStorage.setItem('Auth Token', response._tokenResponse.refreshToken)
-          sessionStorage.setItem('User', JSON.stringify(email))
-          sessionStorage.setItem('Uid', response.user.uid)
+          navigate("/home");
+          sessionStorage.setItem(
+            "Auth Token",
+            response._tokenResponse.refreshToken
+          );
+          sessionStorage.setItem("User", JSON.stringify(email));
+          sessionStorage.setItem("Uid", response.user.uid);
         })
         .catch((error) => {
-          if (error.code === 'auth/email-already-in-use') {
-            toast.error('Email Already in Use');
+          if (error.code === "auth/email-already-in-use") {
+            toast.error("Email Already in Use");
           }
-        })
-    }
-    else if(id === LOGIN){
+        });
+    } else if (id === LOGIN) {
       signInWithEmailAndPassword(authentication, email, password)
         .then((response) => {
-          sessionStorage.setItem('Auth Token', response._tokenResponse.refreshToken)
-          sessionStorage.setItem('User', JSON.stringify(email))
-          sessionStorage.setItem('Uid', response.user.uid)
-          navigate('/home')
+          sessionStorage.setItem(
+            "Auth Token",
+            response._tokenResponse.refreshToken
+          );
+          sessionStorage.setItem("User", JSON.stringify(email));
+          sessionStorage.setItem("Uid", response.user.uid);
+          navigate("/home");
         })
         .catch((error) => {
-          if(error.code === 'auth/wrong-password'){
-            toast.error('Please check the Password');
+          if (error.code === "auth/wrong-password") {
+            toast.error("Please check the Password");
           }
-          if(error.code === 'auth/user-not-found'){
-            toast.error('Please check the Email');
+          if (error.code === "auth/user-not-found") {
+            toast.error("Please check the Email");
           }
-        })
+        });
+    } else if (id === REDIRECT_TO_LOGIN) {
+      navigate("/Login");
+    } else if (id === REDIRECT_TO_REGISTER) {
+      navigate("/Register");
     }
-    else if(id === REDIRECT_TO_LOGIN) {
-         navigate('/Login') 
-    }
-    else if(id === REDIRECT_TO_REGISTER) { 
-         navigate('/Register');
-    }
-  }
+  };
   useEffect(() => {
-    let authToken = sessionStorage.getItem('Auth Token')
+    let authToken = sessionStorage.getItem("Auth Token");
 
     if (authToken) {
-      navigate('/home')
+      navigate("/home");
     }
-  }, [])
+  }, [navigate]);
   return (
     <div className="App">
       <>
         <Routes>
-        <Route
-            path='/'
+          <Route
+            path="/"
             element={
               <Form
                 title="Login"
@@ -82,10 +85,11 @@ function App() {
                 setPassword={setPassword}
                 handleAction={() => handleAction(LOGIN)}
                 redirect={() => handleAction(REDIRECT_TO_REGISTER)}
-              />}
+              />
+            }
           />
           <Route
-            path='/login'
+            path="/login"
             element={
               <Form
                 title="Login"
@@ -93,10 +97,11 @@ function App() {
                 setPassword={setPassword}
                 handleAction={() => handleAction(LOGIN)}
                 redirect={() => handleAction(REDIRECT_TO_REGISTER)}
-              />}
+              />
+            }
           />
           <Route
-            path='/register'
+            path="/register"
             element={
               <Form
                 title="Register"
@@ -104,16 +109,14 @@ function App() {
                 setPassword={setPassword}
                 handleAction={() => handleAction(REGISTER)}
                 redirect={() => handleAction(REDIRECT_TO_LOGIN)}
-              />}
+              />
+            }
           />
 
-          <Route
-            path='/home'
-            element={
-              <Home />}
-          />
+          <Route path="/home" element={<Home />} />
         </Routes>
-      </><ToastContainer />
+      </>
+      <ToastContainer />
     </div>
   );
 }
