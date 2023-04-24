@@ -8,6 +8,7 @@ import {
   child,
   getDatabase,
   goOffline,
+  remove,
 } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -62,6 +63,7 @@ export const addTask = (folder, timeStamp) => {
   update(reference, {
     [timeStamp]: {
       short_description: "",
+      priority: "Medium",
     },
   });
 };
@@ -75,4 +77,15 @@ export const updateTask = async (folder, id, task) => {
   await update(reference, {
     [id]: task,
   });
+};
+
+export const deleteTask = async (folder, id) => {
+  let currentUser = sessionStorage.getItem("Uid");
+  let db = getDatabase();
+
+  let reference = ref(
+    db,
+    "users/" + currentUser + "/folders/" + folder + "/" + id
+  );
+  remove(reference).then(() => console.log("Task " + id + " removed"));
 };
