@@ -34,7 +34,7 @@ import FolderOpenOutlinedIcon from "@mui/icons-material/FolderOpenOutlined";
 import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutlined";
 
 export default function Home() {
-  const [currentFolder, setFolder] = useState();
+  const [currentFolder, setCurrentFolder] = useState();
   const [currentTask, setCurrentTask] = useState();
   const [userData, setData] = useState();
   const [isLoaded, setLoaded] = useState(true);
@@ -129,8 +129,9 @@ export default function Home() {
 
   const handleDeleteTask = useCallback(() => {
     deleteTask(currentFolder, currentTask);
+    setCurrentFolder(null);
     setContextMenuIsOpen(false);
-  }, [currentTask, currentFolder]);
+  }, [userData, currentTask, currentFolder, setCurrentFolder]);
 
   const getTasks = () => {
     if (userData && currentFolder) {
@@ -192,7 +193,7 @@ export default function Home() {
   };
 
   const selectFolder = (e) => {
-    setFolder(e.currentTarget.innerText);
+    setCurrentFolder(e.currentTarget.innerText);
   };
 
   const selectTask = (e) => {
@@ -337,7 +338,7 @@ export default function Home() {
                 height: "70vh",
               }}
             >
-              {getTasks()}
+              {Boolean(currentFolder) && getTasks()}
             </List>
           </Paper>
           {getTaskDetails()}
