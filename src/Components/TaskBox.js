@@ -155,6 +155,7 @@ export default function TaskBox({
             <TextField
               id="filled-multiline-flexible"
               name="due_date"
+              type="date"
               label="Due Date"
               maxRows={1}
               value={currentTask.due_date}

@@ -59,11 +59,22 @@ export const addTask = (folder, timeStamp) => {
   let db = getDatabase();
 
   let reference = ref(db, "users/" + currentUser + "/folders/" + folder + "/");
+  const date = new Date();
+  const year = date.getFullYear().toString();
+  const month =
+    date.getMonth() + 1 < 10
+      ? "0" + (date.getMonth() + 1).toString()
+      : (date.toMonth() + 1).toString();
+  const day =
+    date.getDate() < 10
+      ? "0" + date.getDate().toString()
+      : date.getDate().toString();
 
   update(reference, {
     [timeStamp]: {
       short_description: "",
       priority: "Medium",
+      due_date: year + "-" + month + "-" + day,
     },
   });
 };
