@@ -106,6 +106,7 @@ export default function TaskBox({
         <TextField
           id="modal-modal-title"
           name="short_description"
+          placeholder="Give your task a title"
           maxRows={1}
           variant="standard"
           value={currentTask.short_description}

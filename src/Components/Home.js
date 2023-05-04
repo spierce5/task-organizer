@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserData, addFolder, addTask, deleteTask } from "./Firebase";
 import { getAuth } from "firebase/auth";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import "./Home.css";
 import Button from "./Common/Button";
 import ContextMenu from "./Common/ContextMenu";
@@ -112,8 +114,7 @@ export default function Home() {
     (e) => {
       e.preventDefault();
       const target = e.target;
-      const taskId = target.offsetParent.id;
-      console.log(taskId);
+      const taskId = target.offsetParent.id || target.id;
       setContextMenuAnchor(target);
       setCurrentTask(taskId);
       setContextMenuIsOpen(true);
@@ -122,14 +123,24 @@ export default function Home() {
   );
 
   const editTask = useCallback(() => {
-    setEditEnabled(true);
-    setTaskIsOpen(true);
+    if (currentTask) {
+      setEditEnabled(true);
+      setTaskIsOpen(true);
+    } else {
+      toast.error("No task selected");
+    }
     setContextMenuIsOpen(false);
   }, [setTaskIsOpen]);
 
   const handleDeleteTask = useCallback(() => {
-    deleteTask(currentFolder, currentTask);
-    setCurrentFolder(null);
+    if (currentTask) {
+      if (Object.keys(userData.folders[currentFolder]).length === 1) {
+        setCurrentFolder(null);
+      }
+      deleteTask(currentFolder, currentTask);
+    } else {
+      toast.error("No task selected");
+    }
     setContextMenuIsOpen(false);
   }, [userData, currentTask, currentFolder, setCurrentFolder]);
 
@@ -137,11 +148,16 @@ export default function Home() {
     if (userData && currentFolder) {
       let folder = userData.folders[currentFolder];
       return Object.keys(folder).map((task, idx) => (
-        <ListItem key={idx}>
+        <ListItem
+          key={idx}
+          name="list-item"
+          onContextMenu={(e) => console.log(e)}
+        >
           <ListItemButton
             id={task}
             onClick={selectTask}
             onContextMenu={handleRightClick}
+            name="list-item-button"
             ref={contextMenuAnchor}
           >
             <AssignmentIcon color="success" sx={{ fontSize: 40 }} />
@@ -211,10 +227,10 @@ export default function Home() {
 
   const createTask = () => {
     setLoaded(true);
-    let timeStamp = Date.now();
-    addTask(currentFolder, timeStamp);
-    setEditEnabled(true);
-    handleOpen(timeStamp);
+    addTask(currentFolder).then((taskId) => {
+      setEditEnabled(true);
+      handleOpen(taskId);
+    });
   };
 
   const handleClick = (e, ID) => {

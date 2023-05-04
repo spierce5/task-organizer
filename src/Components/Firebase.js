@@ -43,23 +43,26 @@ export const addFolder = (folders, folderName) => {
 
   if (!folders || !folders.includes(folderName)) {
     update(reference2, {
-      [folderName]: getDefaultTask(),
+      [folderName]: getDefaultTask(getNewTaskId()),
     });
   } else {
     toast.error("Folder name is already in use");
   }
 };
 
-export const addTask = (folder, timeStamp) => {
+export const addTask = async (folder, timeStamp) => {
   let currentUser = sessionStorage.getItem("Uid");
   let db = getDatabase();
 
   let reference = ref(db, "users/" + currentUser + "/folders/" + folder + "/");
 
-  update(reference, getDefaultTask());
+  let newTaskId = getNewTaskId();
+  return await update(reference, getDefaultTask(newTaskId)).then(() => {
+    return newTaskId;
+  });
 };
 
-const getDefaultTask = () => {
+const getDefaultTask = (taskId) => {
   const date = new Date();
   const year = date.getFullYear().toString();
   const month =
@@ -72,12 +75,19 @@ const getDefaultTask = () => {
       : date.getDate().toString();
 
   return {
-    [Date.now()]: {
+    [taskId]: {
       short_description: "",
       priority: "Medium",
       due_date: year + "-" + month + "-" + day,
     },
   };
+};
+
+const getNewTaskId = () => {
+  return (
+    Date.now() * Math.floor(Math.random() * 100) +
+    Math.floor(Math.random() * 100)
+  );
 };
 
 export const updateTask = async (folder, id, task) => {
