@@ -43,11 +43,7 @@ export const addFolder = (folders, folderName) => {
 
   if (!folders.includes(folderName)) {
     update(reference2, {
-      [folderName]: {
-        [Date.now()]: {
-          short_description: "New Task",
-        },
-      },
+      [folderName]: getDefaultTask(),
     });
   } else {
     toast.error("Folder name is already in use");
@@ -59,6 +55,11 @@ export const addTask = (folder, timeStamp) => {
   let db = getDatabase();
 
   let reference = ref(db, "users/" + currentUser + "/folders/" + folder + "/");
+
+  update(reference, getDefaultTask());
+};
+
+const getDefaultTask = () => {
   const date = new Date();
   const year = date.getFullYear().toString();
   const month =
@@ -70,13 +71,13 @@ export const addTask = (folder, timeStamp) => {
       ? "0" + date.getDate().toString()
       : date.getDate().toString();
 
-  update(reference, {
-    [timeStamp]: {
+  return {
+    [Date.now()]: {
       short_description: "",
       priority: "Medium",
       due_date: year + "-" + month + "-" + day,
     },
-  });
+  };
 };
 
 export const updateTask = async (folder, id, task) => {
