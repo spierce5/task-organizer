@@ -87,7 +87,8 @@ export default function Home() {
 
   const getFolders = () => {
     if (userData) {
-      return Object.keys(userData.folders).map((folder, idx) => (
+      let folders = userData.folders ? userData.folders : {};
+      return Object.keys(folders).map((folder, idx) => (
         <ListItem key={idx}>
           <ListItemButton
             divider={true}
@@ -129,7 +130,7 @@ export default function Home() {
   const handleDeleteTask = useCallback(() => {
     deleteTask(currentFolder, currentTask);
     setContextMenuIsOpen(false);
-  }, [currentTask]);
+  }, [currentTask, currentFolder]);
 
   const getTasks = () => {
     if (userData && currentFolder) {
@@ -199,7 +200,11 @@ export default function Home() {
   };
 
   const createFolder = () => {
-    addFolder(Object.keys(userData.folders), newFolder);
+    try {
+      addFolder(Object.keys(userData.folders), newFolder);
+    } catch {
+      addFolder(null, newFolder);
+    }
     setAnchorEl(null);
   };
 

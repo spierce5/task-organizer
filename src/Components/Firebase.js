@@ -41,7 +41,7 @@ export const addFolder = (folders, folderName) => {
 
   let reference2 = ref(db, "users/" + currentUser + "/folders/");
 
-  if (!folders.includes(folderName)) {
+  if (!folders || !folders.includes(folderName)) {
     update(reference2, {
       [folderName]: getDefaultTask(),
     });
