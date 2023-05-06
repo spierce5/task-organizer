@@ -10,6 +10,7 @@ import {
   createUserWithEmailAndPassword,
   EmailAuthCredential,
 } from "firebase/auth";
+import { createUserData } from "./Components/Firebase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -27,6 +28,12 @@ function App() {
     if (id === REGISTER) {
       createUserWithEmailAndPassword(authentication, email, password)
         .then((response) => {
+          createUserData({
+            uid: response.user.uid,
+            email: JSON.stringify(email),
+            firstName: "",
+            lastName: "",
+          });
           navigate("/home");
           sessionStorage.setItem(
             "Auth Token",

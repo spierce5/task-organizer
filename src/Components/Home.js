@@ -34,7 +34,7 @@ import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutl
 export default function Home() {
   const [currentFolder, setFolder] = useState();
   const [currentTask, setTask] = useState();
-  const [userData, setData] = useState();
+  const [userData, setUserData] = useState();
   const [isLoaded, setLoaded] = useState(true);
   const [taskIsOpen, setTaskOpen] = useState(false);
   const [newTaskOpen, setNewTaskOpen] = useState(false);
@@ -72,13 +72,13 @@ export default function Home() {
       navigate("/home");
       setLoaded(true);
       getAuth();
-      getUserData(setData, setLoaded);
+      getUserData(setUserData, setLoaded);
     }
 
     if (!authToken) {
       navigate("/login");
     }
-  }, []);
+  }, [setUserData, setLoaded, navigate]);
 
   const getBackdrop = () => {
     return (
@@ -92,7 +92,7 @@ export default function Home() {
   };
 
   const getFolders = () => {
-    if (userData) {
+    if (userData && userData.folders) {
       return Object.keys(userData.folders).map((folder, idx) => (
         <ListItem key={idx}>
           <ListItemButton
@@ -159,7 +159,13 @@ export default function Home() {
   };
 
   const createFolder = () => {
-    addFolder(Object.keys(userData.folders), newFolder);
+    let folders;
+    try {
+      folders = Object.keys(userData.folders);
+    } catch {
+      folders = [];
+    }
+    addFolder(folders, newFolder);
     setAnchorEl(null);
   };
 

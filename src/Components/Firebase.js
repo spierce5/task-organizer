@@ -13,6 +13,19 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+export const createUserData = (userInfo) => {
+  let db = getDatabase();
+
+  let dbRef = ref(db, "users/");
+  update(dbRef, {
+    [userInfo.uid]: {
+      first_name: userInfo.firstName,
+      last_name: userInfo.lastName,
+      email: userInfo.email,
+    },
+  });
+};
+
 export const getUserData = (setUserData, setLoaded) => {
   let currentUser = sessionStorage.getItem("Uid");
   let data = {};
@@ -37,19 +50,32 @@ export const getUserData = (setUserData, setLoaded) => {
 export const addFolder = (folders, folderName) => {
   let currentUser = sessionStorage.getItem("Uid");
   let db = getDatabase();
+  if (folders.length > 0) {
+    let ref1 = ref(db, "users/" + currentUser + "/folders/");
 
-  let reference2 = ref(db, "users/" + currentUser + "/folders/");
+    if (!folders.includes(folderName)) {
+      update(ref1, {
+        [folderName]: {
+          [Date.now()]: {
+            short_description: "New Task",
+          },
+        },
+      });
+    } else {
+      toast.error("Folder name is already in use");
+    }
+  } else {
+    let ref2 = ref(db, "users/" + currentUser);
 
-  if (!folders.includes(folderName)) {
-    update(reference2, {
-      [folderName]: {
-        [Date.now()]: {
-          short_description: "New Task",
+    update(ref2, {
+      folders: {
+        [folderName]: {
+          [Date.now()]: {
+            short_description: "New Task",
+          },
         },
       },
     });
-  } else {
-    toast.error("Folder name is already in use");
   }
 };
 
