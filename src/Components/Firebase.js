@@ -8,6 +8,7 @@ import {
   child,
   getDatabase,
   goOffline,
+  remove,
 } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -55,11 +56,7 @@ export const addFolder = (folders, folderName) => {
 
     if (!folders.includes(folderName)) {
       update(ref1, {
-        [folderName]: {
-          [Date.now()]: {
-            short_description: "New Task",
-          },
-        },
+        [folderName]: getDefaultTask(getNewTaskId()),
       });
     } else {
       toast.error("Folder name is already in use");
@@ -69,27 +66,50 @@ export const addFolder = (folders, folderName) => {
 
     update(ref2, {
       folders: {
-        [folderName]: {
-          [Date.now()]: {
-            short_description: "New Task",
-          },
-        },
+        [folderName]: getDefaultTask(getNewTaskId()),
       },
     });
   }
 };
 
-export const addTask = (folder, timeStamp) => {
+export const addTask = async (folder, timeStamp) => {
   let currentUser = sessionStorage.getItem("Uid");
   let db = getDatabase();
 
   let reference = ref(db, "users/" + currentUser + "/folders/" + folder + "/");
 
-  update(reference, {
-    [timeStamp]: {
-      short_description: "",
-    },
+  let newTaskId = getNewTaskId();
+  return await update(reference, getDefaultTask(newTaskId)).then(() => {
+    return newTaskId;
   });
+};
+
+const getDefaultTask = (taskId) => {
+  const date = new Date();
+  const year = date.getFullYear().toString();
+  const month =
+    date.getMonth() + 1 < 10
+      ? "0" + (date.getMonth() + 1).toString()
+      : (date.toMonth() + 1).toString();
+  const day =
+    date.getDate() < 10
+      ? "0" + date.getDate().toString()
+      : date.getDate().toString();
+
+  return {
+    [taskId]: {
+      short_description: "",
+      priority: "Medium",
+      due_date: year + "-" + month + "-" + day,
+    },
+  };
+};
+
+const getNewTaskId = () => {
+  return (
+    Date.now() * Math.floor(Math.random() * 100) +
+    Math.floor(Math.random() * 100)
+  );
 };
 
 export const updateTask = async (folder, id, task) => {
@@ -101,4 +121,15 @@ export const updateTask = async (folder, id, task) => {
   await update(reference, {
     [id]: task,
   });
+};
+
+export const deleteTask = async (folder, id) => {
+  let currentUser = sessionStorage.getItem("Uid");
+  let db = getDatabase();
+
+  let reference = ref(
+    db,
+    "users/" + currentUser + "/folders/" + folder + "/" + id
+  );
+  remove(reference).then(() => console.log("Task " + id + " removed"));
 };

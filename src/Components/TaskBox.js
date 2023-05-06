@@ -106,6 +106,7 @@ export default function TaskBox({
         <TextField
           id="modal-modal-title"
           name="short_description"
+          placeholder="Give your task a title"
           maxRows={1}
           variant="standard"
           value={currentTask.short_description}
@@ -155,6 +156,7 @@ export default function TaskBox({
             <TextField
               id="filled-multiline-flexible"
               name="due_date"
+              type="date"
               label="Due Date"
               maxRows={1}
               value={currentTask.due_date}
