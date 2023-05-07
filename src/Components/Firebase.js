@@ -133,3 +133,13 @@ export const deleteTask = async (folder, id) => {
   );
   remove(reference).then(() => console.log("Task " + id + " removed"));
 };
+
+export const deleteFolder = async (folder) => {
+  let currentUser = sessionStorage.getItem("Uid");
+  let db = getDatabase();
+
+  let reference = ref(db, "users/" + currentUser + "/folders/" + folder);
+  remove(reference).then(() =>
+    toast.success('Folder "' + folder + '" was removed')
+  );
+};

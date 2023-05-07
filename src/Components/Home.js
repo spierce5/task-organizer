@@ -9,6 +9,8 @@ import Button from "./Common/Button";
 import ContextMenu from "./Common/ContextMenu";
 import AppBar from "./Common/AppBar";
 import TaskBox from "./TaskBox";
+import TaskList from "./TaskList";
+import FolderList from "./FolderList";
 import {
   List,
   ListSubheader,
@@ -87,40 +89,6 @@ export default function Home() {
     }
   }, [setUserData, setLoaded, navigate]);
 
-  const getFolders = () => {
-    if (userData && userData.folders) {
-      return Object.keys(userData.folders).map((folder, idx) => (
-        <ListItem key={idx}>
-          <ListItemButton
-            divider={true}
-            onClick={(e) => {
-              handleClick(e, SELECT_FOLDER);
-            }}
-          >
-            <ListItemAvatar>
-              <Avatar>
-                <FolderOpenOutlinedIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={folder} />
-          </ListItemButton>
-        </ListItem>
-      ));
-    }
-  };
-
-  const handleRightClick = useCallback(
-    (e) => {
-      e.preventDefault();
-      const target = e.target;
-      const taskId = target.offsetParent.id || target.id;
-      setContextMenuAnchor(target);
-      setCurrentTask(taskId);
-      setContextMenuIsOpen(true);
-    },
-    [setContextMenuAnchor, setCurrentTask, setContextMenuIsOpen]
-  );
-
   const editTask = useCallback(() => {
     if (currentTask) {
       setEditEnabled(true);
@@ -129,7 +97,7 @@ export default function Home() {
       toast.error("No task selected");
     }
     setContextMenuIsOpen(false);
-  }, [setCurrentTaskIsOpen]);
+  }, [currentTask, setCurrentTaskIsOpen]);
 
   const handleDeleteTask = useCallback(() => {
     if (currentTask) {
@@ -142,55 +110,6 @@ export default function Home() {
     }
     setContextMenuIsOpen(false);
   }, [userData, currentTask, currentFolder, setCurrentFolder]);
-
-  const getTasks = () => {
-    if (userData && currentFolder) {
-      let folder = userData.folders[currentFolder];
-      return Object.keys(folder).map((task, idx) => (
-        <ListItem
-          key={idx}
-          name="list-item"
-          onContextMenu={(e) => console.log(e)}
-        >
-          <ListItemButton
-            id={task}
-            onClick={selectTask}
-            onContextMenu={handleRightClick}
-            name="list-item-button"
-            ref={contextMenuAnchor}
-          >
-            <AssignmentIcon color="success" sx={{ fontSize: 40 }} />
-            <ListItemText
-              fontSize="large"
-              primary={folder[task].short_description}
-              secondary={
-                folder[task].due_date
-                  ? "Due: " + folder[task].due_date
-                  : "No due date"
-              }
-            />
-          </ListItemButton>
-          {/* <Popper
-            open={contextMenuIsOpen}
-            anchorEl={contextMenuAnchor}
-            role={undefined}
-            placement="bottom-start"
-            transition
-            disablePortal
-          > */}
-          <ContextMenu
-            open={contextMenuIsOpen}
-            taskId={task}
-            handleClose={() => setContextMenuIsOpen(false)}
-            handleEdit={editTask}
-            handleDelete={handleDeleteTask}
-            anchorEl={contextMenuAnchor}
-          />
-          {/* </Popper> */}
-        </ListItem>
-      ));
-    }
-  };
 
   const getTaskDetails = () => {
     if (taskIsOpen) {
@@ -211,9 +130,9 @@ export default function Home() {
     setCurrentFolder(e.currentTarget.innerText);
   };
 
-  const selectTask = (e) => {
+  const selectTask = useCallback((e) => {
     handleOpen(e.currentTarget.id);
-  };
+  }, []);
 
   const createFolder = () => {
     let folders;
@@ -320,7 +239,15 @@ export default function Home() {
                 </Box>
               </Popover>
             </ListSubheader>
-            <List>{getFolders()}</List>
+            <List>
+              {userData && userData.folders && (
+                <FolderList
+                  folders={userData.folders}
+                  handleClick={handleClick}
+                  SELECT_FOLDER={SELECT_FOLDER}
+                />
+              )}
+            </List>
           </Paper>
         </div>
         <div id="task-container">
@@ -355,7 +282,15 @@ export default function Home() {
                 height: "70vh",
               }}
             >
-              {Boolean(currentFolder) && getTasks()}
+              {Boolean(currentFolder) && (
+                <TaskList
+                  folder={userData.folders[currentFolder]}
+                  selectTask={selectTask}
+                  setCurrentTask={setCurrentTask}
+                  editTask={editTask}
+                  handleDeleteTask={handleDeleteTask}
+                />
+              )}
             </List>
           </Paper>
           {getTaskDetails()}
