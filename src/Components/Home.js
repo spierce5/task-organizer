@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import "./Home.css";
 import Button from "./Common/Button";
-import ContextMenu from "./Common/ContextMenu";
 import AppBar from "./Common/AppBar";
 import TaskBox from "./TaskBox";
 import TaskList from "./TaskList";
@@ -14,41 +13,28 @@ import FolderList from "./FolderList";
 import {
   List,
   ListSubheader,
-  ListItem,
-  ListItemText,
-  ListItemButton,
-  ListItemAvatar,
-  Avatar,
   Paper,
   Backdrop,
   CircularProgress,
   IconButton,
   Tooltip,
-  DialogTitle,
-  Dialog,
   Popover,
   TextField,
   Box,
   Stack,
-  Popper,
 } from "@mui/material";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import FolderOpenOutlinedIcon from "@mui/icons-material/FolderOpenOutlined";
 import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutlined";
 
 export default function Home() {
-  const [currentFolder, setCurrentFolder] = useState();
-  const [currentTask, setCurrentTask] = useState();
-  const [userData, setUserData] = useState();
+  const [currentFolder, setCurrentFolder] = useState(null);
+  const [currentTask, setCurrentTask] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [isLoaded, setLoaded] = useState(true);
   const [taskIsOpen, setCurrentTaskIsOpen] = useState(false);
   const [editEnabled, setEditEnabled] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [newFolder, setNewFolder] = useState(null);
-  const [contextMenuIsOpen, setContextMenuIsOpen] = useState(false);
-  const [contextMenuAnchor, setContextMenuAnchor] = useState(null);
-  const anchorRef = React.useRef(null);
 
   const handlePopoverClose = () => {
     setAnchorEl(null);
@@ -96,7 +82,6 @@ export default function Home() {
     } else {
       toast.error("No task selected");
     }
-    setContextMenuIsOpen(false);
   }, [currentTask, setCurrentTaskIsOpen]);
 
   const handleDeleteTask = useCallback(() => {
@@ -108,7 +93,6 @@ export default function Home() {
     } else {
       toast.error("No task selected");
     }
-    setContextMenuIsOpen(false);
   }, [userData, currentTask, currentFolder, setCurrentFolder]);
 
   const getTaskDetails = () => {
@@ -240,13 +224,17 @@ export default function Home() {
               </Popover>
             </ListSubheader>
             <List>
-              {userData && userData.folders && (
-                <FolderList
-                  folders={userData.folders}
-                  handleClick={handleClick}
-                  SELECT_FOLDER={SELECT_FOLDER}
-                />
-              )}
+              <FolderList
+                folders={
+                  userData &&
+                  userData.hasOwnProperty("folders") &&
+                  userData.folders
+                }
+                handleClick={handleClick}
+                SELECT_FOLDER={SELECT_FOLDER}
+                currentFolder={currentFolder || null}
+                setCurrentFolder={setCurrentFolder}
+              />
             </List>
           </Paper>
         </div>
@@ -282,15 +270,19 @@ export default function Home() {
                 height: "70vh",
               }}
             >
-              {Boolean(currentFolder) && (
-                <TaskList
-                  folder={userData.folders[currentFolder]}
-                  selectTask={selectTask}
-                  setCurrentTask={setCurrentTask}
-                  editTask={editTask}
-                  handleDeleteTask={handleDeleteTask}
-                />
-              )}
+              <TaskList
+                folder={
+                  userData &&
+                  userData.hasOwnProperty("folders") &&
+                  userData.folders.hasOwnProperty(currentFolder)
+                    ? userData.folders[currentFolder]
+                    : null
+                }
+                selectTask={selectTask}
+                setCurrentTask={setCurrentTask}
+                editTask={editTask}
+                handleDeleteTask={handleDeleteTask}
+              />
             </List>
           </Paper>
           {getTaskDetails()}

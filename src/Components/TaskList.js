@@ -13,6 +13,10 @@ export default function TaskList({
   const [contextMenuIsOpen, setContextMenuIsOpen] = useState(false);
   const [contextMenuAnchor, setContextMenuAnchor] = useState(null);
 
+  useEffect(() => {
+    console.log(folder);
+  }, [folder]);
+
   const handleRightClick = useCallback(
     (e) => {
       e.preventDefault();
@@ -25,35 +29,42 @@ export default function TaskList({
     [setContextMenuAnchor, setCurrentTask, setContextMenuIsOpen]
   );
 
-  return Object.keys(folder).map((task, idx) => (
-    <ListItem key={idx} name="list-item" onContextMenu={(e) => console.log(e)}>
-      <ListItemButton
-        id={task}
-        onClick={selectTask}
-        onContextMenu={handleRightClick}
-        name="list-item-button"
-        ref={contextMenuAnchor}
+  return (
+    folder &&
+    Object.keys(folder).map((task, idx) => (
+      <ListItem
+        key={idx}
+        name="list-item"
+        onContextMenu={(e) => console.log(e)}
       >
-        <AssignmentIcon color="success" sx={{ fontSize: 40 }} />
-        <ListItemText
-          fontSize="large"
-          primary={folder[task].short_description}
-          secondary={
-            folder[task].due_date
-              ? "Due: " + folder[task].due_date
-              : "No due date"
-          }
+        <ListItemButton
+          id={task}
+          onClick={selectTask}
+          onContextMenu={handleRightClick}
+          name="list-item-button"
+          ref={contextMenuAnchor}
+        >
+          <AssignmentIcon color="success" sx={{ fontSize: 40 }} />
+          <ListItemText
+            fontSize="large"
+            primary={folder[task].short_description}
+            secondary={
+              folder[task].due_date
+                ? "Due: " + folder[task].due_date
+                : "No due date"
+            }
+          />
+        </ListItemButton>
+        <ContextMenu
+          type="task"
+          open={contextMenuIsOpen}
+          taskId={task}
+          handleClose={() => setContextMenuIsOpen(false)}
+          handleEdit={editTask}
+          handleDelete={handleDeleteTask}
+          anchorEl={contextMenuAnchor}
         />
-      </ListItemButton>
-      <ContextMenu
-        type="task"
-        open={contextMenuIsOpen}
-        taskId={task}
-        handleClose={() => setContextMenuIsOpen(false)}
-        handleEdit={editTask}
-        handleDelete={handleDeleteTask}
-        anchorEl={contextMenuAnchor}
-      />
-    </ListItem>
-  ));
+      </ListItem>
+    ))
+  );
 }

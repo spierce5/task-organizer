@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Paper,
   Menu,
@@ -17,13 +17,23 @@ export default function ContextMenu({
   handleEdit,
   handleDelete,
 }) {
+  const handleEditAction = useCallback(() => {
+    handleEdit();
+    handleClose();
+  }, [handleEdit, handleClose]);
+
+  const handleDeleteAction = useCallback(() => {
+    handleDelete();
+    handleClose();
+  }, [handleDelete, handleClose]);
+
   const types = {
     folder: {
       items: [
         {
           key: "delete",
           text: "Delete Folder",
-          action: handleDelete,
+          action: handleDeleteAction,
           icon: <DeleteForeverIcon fontSize="small" />,
         },
       ],
@@ -33,18 +43,19 @@ export default function ContextMenu({
         {
           key: "edit",
           text: "Edit Task",
-          action: handleEdit,
+          action: handleEditAction,
           icon: <EditIcon fontSize="small" />,
         },
         {
           key: "delete",
           text: "Delete Task",
-          action: handleDelete,
+          action: handleDeleteAction,
           icon: <DeleteForeverIcon fontSize="small" />,
         },
       ],
     },
   };
+
   return (
     <Paper sx={{ width: 320, maxWidth: "100%" }}>
       <Menu open={open} anchorEl={anchorEl} onClose={handleClose}>
