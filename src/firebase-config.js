@@ -9,13 +9,13 @@ import { getDatabase } from "firebase/database";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyD-F0TWmS5yZthGaN4ijUzShRcF0MBWKwA",
+  apiKey: process.env.REACT_APP_API_KEY,
   authDomain: "react-register-f4977.firebaseapp.com",
-  databaseURL: "https://react-register-f4977-default-rtdb.firebaseio.com",
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
   projectId: "react-register-f4977",
   storageBucket: "react-register-f4977.appspot.com",
   messagingSenderId: "756925330854",
-  appId: "1:756925330854:web:405a71ed7aa820beb58b67",
+  appId: process.env.REACT_APP_APP_ID,
   measurementId: "G-MVLWXJLSGL"
 };
 
